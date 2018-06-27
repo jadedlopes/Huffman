@@ -4,6 +4,7 @@
 #include "../header/lista_enc.h"
 #include "../header/no.h"
 #include "../header/fila.h"
+#include "../header/huffman.h"
 
 #define FALSO 0
 #define VERDADEIRO 1
@@ -29,12 +30,15 @@ fila_t * cria_fila (void)
 
 
 //adiciona elemento
-void enqueue(void* dado, fila_t *fila)
+void enqueue(void *symbol, fila_t *fila)
 {
-	no_t *no;
+    int count;
+    symbol_t *comp_symbol;
+	no_t *no, *no_symbol;
+    no_symbol = cria_no(symbol);
 
     if (fila == NULL) {
-        fprintf(stderr, "push: pilha invalida\n");
+        fprintf(stderr, "push: fila invalida\n");
         exit(EXIT_FAILURE);
     }
 
@@ -42,8 +46,20 @@ void enqueue(void* dado, fila_t *fila)
     printf("enqueue: %x\n", dado);
     #endif // DEBUG
 
-    no = cria_no(dado);
-    add_cauda(fila->dados, no);
+    //add_cauda(fila->dados, no);
+    no = obter_cabeca(fila->dados);
+
+    for (count = 0; count < obter_tamanho(fila->dados); count++) {
+        comp_symbol = obter_dado(no);
+        if(get_qty(symbol) > get_qty(comp_symbol)){
+            no = obtem_proximo(no);
+        }
+        else {
+            break;
+        }
+    }
+
+    add_antes(fila->dados, no_symbol, no);
 }
 
 //retira elemento do topo
