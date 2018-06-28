@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "../header/huffman.h"
 
+#define TAM_SYM 256
+
 struct symbol {
     int val;    //  Valor
     int qty;    //  Quantidade
@@ -22,15 +24,24 @@ fila_t * read_file(char *filename)
         exit(-1);
     }
 
-    symbol_array = calloc(sizeof(int), 256);   // 256 é a quantidade possível de símbolos, todos inicializados em zero
+    symbol_array = calloc(TAM_SYM, sizeof(int));   // 256 é a quantidade possível de símbolos, todos inicializados em zero
+    if(symbol_array == NULL){
+        perror("huffman: read_file - symbol_array calloc: ");
+        exit(EXIT_FAILURE);
+    }
 
     while(fread(&temp, sizeof(unsigned char), 1, fp) == 1) {
         symbol_array[temp]++;
     }
 
-    for(aux = 0; aux < 256; aux++) {
+    for(aux = 0; aux < TAM_SYM; aux++) {
         if(symbol_array[aux] != 0){
             symbol = malloc(sizeof(symbol_t));
+            if(symbol == NULL){
+                perror("huffman: read_file - symbol malloc: ");
+                exit(EXIT_FAILURE);
+            }
+
             symbol->val = aux;                       // A posição é o símbolo
             symbol->qty = symbol_array[aux];         // Cada posição tem a quantidade de vezes que o símbolo aparece
             enqueue(symbol, fila);
@@ -38,6 +49,7 @@ fila_t * read_file(char *filename)
     }
 
     fclose(fp);
+    free(symbol_array);
 
     return fila;
 }
