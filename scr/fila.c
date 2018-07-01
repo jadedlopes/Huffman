@@ -106,3 +106,12 @@ int fila_vazia(fila_t *fila)
 
     return lista_vazia(fila->dados);
 }
+
+int fila_tamanho (fila_t* fila){
+    if (fila == NULL) {
+        fprintf(stderr, "fila_tamanho: fila invalida\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return obter_tamanho(fila->dados);
+}
