@@ -263,11 +263,9 @@ void add_antes(lista_enc_t *lista, no_t *no, no_t *no_prox)
     if (obtem_anterior(no_prox) == NULL) {
 
         if (lista->tamanho == 0) {
-
             lista->cauda = no;
             lista->cabeca = no;
             lista->tamanho++;
-
             desliga_no(no);
         }
         else {
@@ -279,18 +277,13 @@ void add_antes(lista_enc_t *lista, no_t *no, no_t *no_prox)
             lista->cabeca = no;
             lista->tamanho++;
         }
-
         return;
     }
 
-    if (obtem_proximo(no_prox) == NULL) {
-        add_cauda(lista, no);
-        return;
-    }
-
-    liga_nos(no, no_prox);
     aux = obtem_anterior(no_prox);
+    liga_nos(no, no_prox);
     liga_nos(aux, no);
+    lista->tamanho++;
 
     return;
 }

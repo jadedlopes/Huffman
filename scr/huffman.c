@@ -26,6 +26,7 @@ fila_t * read_file(char *filename)
 
     while(fread(&temp, sizeof(unsigned char), 1, fp) == 1) {
         symbol_array[temp]++;
+
     }
 
     for(aux = 0; aux < 256; aux++) {
@@ -51,3 +52,5 @@ int get_qty(symbol_t * symbol)
 {
     return symbol->qty;
 }
+
+

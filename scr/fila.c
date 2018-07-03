@@ -46,7 +46,6 @@ void enqueue(void *symbol, fila_t *fila)
     printf("enqueue: %x\n", dado);
     #endif // DEBUG
 
-    //add_cauda(fila->dados, no);
     no = obter_cabeca(fila->dados);
 
     for (count = 0; count < obter_tamanho(fila->dados); count++) {
