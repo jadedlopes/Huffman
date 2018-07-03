@@ -7,6 +7,8 @@
 #define TRUE 1
 #define FALSE 0
 
+//#define DEBUG
+
 struct symbol {
     int val;    //  Valor
     int qty;    //  Quantidade
@@ -96,6 +98,10 @@ tree_t* create_huffmanTree (fila_t* Q){
         tree_add_node(tree, f, n);
         tree_add_node(tree, f, n2);
 
+        #ifdef DEBUG
+            printf("s -- %c ; s -- %c\n", get_val(node_get_data(n)), get_val(node_get_data(n2)));
+        #endif // DEBUG
+
         enqueue(f, Q);
     }
 
@@ -146,12 +152,12 @@ static void export_run_tree (FILE* fp, node_t* node){
     s1 = node_get_data(node_get_right(node));
     s2 = node_get_data(node_get_left(node));
     if (node_is_leaf(node_get_right(node))){
-        fprintf(fp, "\tInterm_%d -- '%c'_%d [label= %d];\n", s->qty, s1->val, s1->qty, 1);
+        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty,'"', s1->val, '"', 1);
     }else{
         fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s1->qty, 1);
     }
     if (node_is_leaf(node_get_left(node))){
-        fprintf(fp, "\tInterm_%d -- '%c'_%d [label= %d];\n", s->qty, s2->val, s2->qty, 0);
+        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty, '"',s2->val, '"', 0);
     }else{
         fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s2->qty, 0);
     }

@@ -17,7 +17,7 @@ int main()
 
     /*while(!fila_vazia(fila)) {
         symbol = node_get_data(dequeue(fila));
-        printf("Valor: %d\nQuantidade: %d\n", get_val(symbol), get_qty(symbol));
+        printf("Valor: %c\nQuantidade: %d\n", get_val(symbol), get_qty(symbol));
     }*/
 
     return 0;

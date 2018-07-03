@@ -1,0 +1,12 @@
+graph {
+	Interm_15 -- Interm_6 [label= 1];
+	Interm_15 -- Interm_9 [label= 0];
+	Interm_9 -- Interm_4 [label= 1];
+	Interm_9 -- "o" [label= 0];
+	Interm_4 -- Interm_2 [label= 1];
+	Interm_4 -- " " [label= 0];
+	Interm_2 -- "," [label= 1];
+	Interm_2 -- "!" [label= 0];
+	Interm_6 -- "b" [label= 1];
+	Interm_6 -- "m" [label= 0];
+}
