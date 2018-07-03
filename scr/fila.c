@@ -5,9 +5,12 @@
 #include "../header/no.h"
 #include "../header/fila.h"
 #include "../header/huffman.h"
+#include "../header/binary_tree.h"
 
 #define FALSO 0
 #define VERDADEIRO 1
+
+//#define DEBUG
 
 struct filas {
 	lista_enc_t *dados;
@@ -30,28 +33,25 @@ fila_t * cria_fila (void)
 
 
 //adiciona elemento
-void enqueue(void *symbol, fila_t *fila)
+void enqueue(void *node, fila_t *fila)
 {
     int count;
-    symbol_t *comp_symbol;
+    symbol_t *c_symbol;
 	no_t *no, *no_symbol;
-    no_symbol = cria_no(symbol);
+    no_symbol = cria_no(node);
 
     if (fila == NULL) {
         fprintf(stderr, "push: fila invalida\n");
         exit(EXIT_FAILURE);
     }
 
-    #ifdef DEBUG
-    printf("enqueue: %x\n", dado);
-    #endif // DEBUG
-
     //add_cauda(fila->dados, no);
     no = obter_cabeca(fila->dados);
 
     for (count = 0; count < obter_tamanho(fila->dados); count++) {
-        comp_symbol = obter_dado(no);
-        if(get_qty(symbol) > get_qty(comp_symbol)){
+        c_symbol = node_get_data(obter_dado(no));
+        if (get_qty(node_get_data(node))>get_qty(c_symbol)){
+        //if(get_qty(symbol) > get_qty(c_symbol)){
             no = obtem_proximo(no);
         }
         else {

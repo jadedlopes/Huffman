@@ -12,12 +12,17 @@ struct symbol {
     int qty;    //  Quantidade
 };
 
+//----------- Private Functions ----------------
+static void export_run_tree (FILE* fp, node_t* node);
+//----------------------------------------------
+
 fila_t * read_file(char *filename)
 {
     int aux;
     int * symbol_array;
     unsigned char temp;
     symbol_t * symbol;
+    node_t* node;
     fila_t * fila = cria_fila();
 
     FILE *fp = fopen(filename, "rb");   // Leitura binária para pegar todos os símbolos do arquivo sem formatação
@@ -47,7 +52,8 @@ fila_t * read_file(char *filename)
 
             symbol->val = aux;                       // A posição é o símbolo
             symbol->qty = symbol_array[aux];         // Cada posição tem a quantidade de vezes que o símbolo aparece
-            enqueue(symbol, fila);
+            node = create_t_node(symbol);
+            enqueue(node, fila);
         }
     }
 
@@ -74,40 +80,28 @@ tree_t* create_huffmanTree (fila_t* Q){
     }
 
     tree_t* tree = create_tree(comp_symbol);
-    symbol_t* s1, *s2;
+    symbol_t* s;
     node_t* n;
     node_t* n2;
+    node_t* f;
 
-    symbol_t* s = malloc(sizeof(symbol_t));
-
-    s1 = dequeue(Q);
-    s2 = dequeue(Q);
-    s->qty = s1->qty + s2->qty;
-    n2 = create_t_node(s1);
-
-    n = create_t_node(s);
-    tree_add_root(tree, n);
-
-    tree_add_node(tree, n, n2);
-
-    n2 = create_t_node(s2);
-
-    tree_add_node(tree, n, n2);
-
-    while(!fila_vazia(Q)){
+    while(fila_tamanho(Q)>1){
         s = malloc(sizeof(symbol_t));
 
-        s1 = dequeue(Q);
-        s2 = node_get_data(tree_get_root(tree));
-        s->qty = s1->qty + s2->qty;
-        n2 = create_t_node(s1);
+        n = dequeue(Q);
+        n2 = dequeue(Q);
+        s->qty = get_qty(node_get_data(n)) + get_qty(node_get_data(n2));
 
-        n = create_t_node(s);
+        f = create_t_node(s);
+        tree_add_node(tree, f, n);
+        tree_add_node(tree, f, n2);
 
-        tree_add_root(tree, n);
-
-        tree_add_node(tree, n, n2);
+        enqueue(f, Q);
     }
+
+    n = dequeue(Q);
+
+    tree_add_root(tree, n);
 
     return tree;
 }
@@ -122,3 +116,54 @@ int comp_symbol (void* s1, void* s2){
         return FALSE;
     }
 }
+
+void export_huffmanTree (const char* filename, tree_t* t){
+    if (filename == NULL || t == NULL){
+        perror("Erro huffman -> export_huffmanTree: ponteiros invalidoss");
+    }
+
+    FILE* fp = fopen(filename, "w");
+    if (fp == NULL){
+        perror("huffman -> export_huffmanTree: file open");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(fp, "graph {\n");
+
+    export_run_tree(fp, tree_get_root(t));
+
+    fprintf(fp, "}\n");
+
+    fclose(fp);
+}
+
+static void export_run_tree (FILE* fp, node_t* node){
+    if (node_is_leaf(node)){
+        return;
+    }
+    symbol_t* s, *s1, *s2;
+    s = node_get_data(node);
+    s1 = node_get_data(node_get_right(node));
+    s2 = node_get_data(node_get_left(node));
+    if (node_is_leaf(node_get_right(node))){
+        fprintf(fp, "\tInterm_%d -- '%c'_%d [label= %d];\n", s->qty, s1->val, s1->qty, 1);
+    }else{
+        fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s1->qty, 1);
+    }
+    if (node_is_leaf(node_get_left(node))){
+        fprintf(fp, "\tInterm_%d -- '%c'_%d [label= %d];\n", s->qty, s2->val, s2->qty, 0);
+    }else{
+        fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s2->qty, 0);
+    }
+
+
+    export_run_tree (fp, node_get_left(node));
+    export_run_tree (fp, node_get_right(node));
+}
+
+
+//char** generate_code_array (tree_t* t){
+//}
+
+//void free_huffmanTree(tree_t* t){
+//}

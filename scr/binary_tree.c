@@ -67,7 +67,7 @@ void tree_add_node (tree_t* t, node_t* father, node_t* node){
     }
 
     if(father->right != NULL){
-        comp = t->comp(node_get_data(node), father->right);
+        comp = t->comp(node_get_data(node), node_get_data(father->right));
 
         if (comp){
             node_set_left(father, node);
@@ -77,17 +77,18 @@ void tree_add_node (tree_t* t, node_t* father, node_t* node){
             node_set_left(father, n);
         }
     }else{
-        comp = t->comp(node_get_data(node), father->left);
+        comp = t->comp(node_get_data(father->left), node_get_data(node));
 
         if (comp){
+            node_set_right(father, node);
+        }else{
             node_t* n = father->left;
             node_set_right(father, n);
             node_set_left(father, node);
-        }else{
-            node_set_right(father, node);
         }
     }
 
+    return;
 }
 
 void tree_add_root(tree_t* tree, node_t* node){
@@ -100,9 +101,37 @@ void tree_add_root(tree_t* tree, node_t* node){
         tree->root = node;
 
         return;
+
     }
 
-    node_set_right(node, tree->root);
+    if(node->right != NULL && node->left != NULL){
+        perror("Erro binary_tree -> tree_add_root: não foi possivel adicionar raizn");
+        return;
+    }
+
+    int comp;
+
+    if(node->right != NULL){
+        comp = tree->comp(node_get_data(tree->root), node_get_data(node->right));
+
+        if (comp){
+            node_set_left(node, tree->root);
+        }else{
+            node_t* n = node->right;
+            node_set_right(node, tree->root);
+            node_set_left(node, n);
+        }
+    }else{
+        comp = tree->comp(node_get_data(node->left), node_get_data(tree->root));
+
+        if (comp){
+            node_set_right(node, tree->root);
+        }else{
+            node_t* n = node->left;
+            node_set_right(node, n);
+            node_set_left(node, tree->root);
+        }
+    }
     tree->root = node;
 }
 
