@@ -14,5 +14,6 @@ int get_qty(symbol_t * symbol);
 tree_t* create_huffmanTree (fila_t* Q);
 int comp_symbol (void* s1, void* s2);
 void export_huffmanTree (const char* filename, tree_t* t);
+void generate_code_array (node_t* node, char** code_array, char* symbol_code, int aux);
 
 #endif // HUFFMAN_H_INCLUDED

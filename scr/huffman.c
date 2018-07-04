@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../header/huffman.h"
 #include "../header/binary_tree.h"
 
@@ -76,9 +77,7 @@ int get_qty(symbol_t * symbol)
     return symbol->qty;
 }
 
-<<<<<<< HEAD
 
-=======
 tree_t* create_huffmanTree (fila_t* Q){
     if (Q == NULL){
         perror("Erro huffman->create_huffmanTree: ponteiro invalido");
@@ -156,12 +155,12 @@ static void export_run_tree (FILE* fp, node_t* node){
     s1 = node_get_data(node_get_right(node));
     s2 = node_get_data(node_get_left(node));
     if (node_is_leaf(node_get_right(node))){
-        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty,'"', s1->val, '"', 1);
+        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty, s1->val, 1);
     }else{
         fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s1->qty, 1);
     }
     if (node_is_leaf(node_get_left(node))){
-        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty, '"',s2->val, '"', 0);
+        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty, s2->val, 0);
     }else{
         fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s2->qty, 0);
     }
@@ -172,9 +171,23 @@ static void export_run_tree (FILE* fp, node_t* node){
 }
 
 
-//char** generate_code_array (tree_t* t){
-//}
+void generate_code_array (node_t* node, char** code_array, char* symbol_code, int aux){
+    if (node == NULL){
+        return;
+    }
+
+    if (node_is_leaf(node)){
+        code_array[get_val(node_get_data(node))] = strncpy(malloc(strlen(symbol_code)+1), symbol_code, strlen(symbol_code)+1);
+    }
+
+    symbol_code[aux] = '0';
+    symbol_code[aux+1] = 0;
+    generate_code_array(node_get_left(node), code_array, symbol_code, aux+1);
+
+    symbol_code[aux] = '1';
+    symbol_code[aux+1] = 0;
+    generate_code_array(node_get_right(node), code_array, symbol_code, aux+1);
+}
 
 //void free_huffmanTree(tree_t* t){
 //}
->>>>>>> 36bf3759e988bbf6ac5f14d29453b153f6e748ab

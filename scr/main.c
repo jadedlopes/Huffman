@@ -8,12 +8,22 @@ int main()
     fila_t * fila;
     symbol_t * symbol;
     tree_t* t;
+    char code[100] = {0};
+    char* code_array [256] = {0};
+    int i;
 
     fila = read_file("bolo.txt");
 
     t = create_huffmanTree(fila);
 
     export_huffmanTree("tree.dot", t);
+
+    generate_code_array(tree_get_root(t), code_array, code, 0);
+
+    for (i=0; i<256; i++){
+        if(code_array[i])
+            printf("%c -- %s\n", i, code_array[i]);
+    }
 
     /*while(!fila_vazia(fila)) {
         symbol = node_get_data(dequeue(fila));
