@@ -112,6 +112,8 @@ tree_t* create_huffmanTree (fila_t* Q){
 
     tree_add_root(tree, n);
 
+    libera_fila(Q);
+
     return tree;
 }
 
@@ -155,14 +157,14 @@ static void export_run_tree (FILE* fp, node_t* node){
     s1 = node_get_data(node_get_right(node));
     s2 = node_get_data(node_get_left(node));
     if (node_is_leaf(node_get_right(node))){
-        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty, s1->val, 1);
+        fprintf(fp, "\t\"%p\" -- \"%c\" [label= %d];\n", s, s1->val, 1);
     }else{
-        fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s1->qty, 1);
+        fprintf(fp, "\t\"%p\" -- \"%p\" [label= %d];\n", s, s1, 1);
     }
     if (node_is_leaf(node_get_left(node))){
-        fprintf(fp, "\tInterm_%d -- \"%c\" [label= %d];\n", s->qty, s2->val, 0);
+        fprintf(fp, "\t\"%p\" -- \"%c\" [label= %d];\n", s, s2->val, 0);
     }else{
-        fprintf(fp, "\tInterm_%d -- Interm_%d [label= %d];\n", s->qty, s2->qty, 0);
+        fprintf(fp, "\t\"%p\" -- \"%p\" [label= %d];\n", s, s2, 0);
     }
 
 
@@ -199,14 +201,13 @@ void compress_file (char* outputFile, char* inputFile , char** codes){
 
     int c;
 
-    fprintf(fo, "[");
     for (c = 0; c< TAM_SYM; c++){
         if (codes[c]){
-            fprintf(fo, "%d;%s;", c, codes[c]);
+            fprintf(fo, "%c;%s;", c, codes[c]);
         }
     }
 
-    fprintf(fo, " ]");
+    fprintf(fo, " |");
 
     while((c = getc(fi))!= EOF){
         fprintf(fo, "%s", codes[c]);
@@ -229,9 +230,12 @@ void decompress (char* outputFile, char* inputFile , tree_t* t){
         exit(EXIT_FAILURE);
     }
 
-    char* s[3];
+    char* code[10] = {0};
+    symbol_t* s;
 
     //tree_t* t = code_to_tree(fi);
+
+
 
 }
 
