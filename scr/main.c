@@ -25,6 +25,8 @@ int main()
             printf("%c -- %s\n", i, code_array[i]);
     }
 
+    compress_file("bolo.jc", "bolo.txt", code_array);
+
     /*while(!fila_vazia(fila)) {
         symbol = node_get_data(dequeue(fila));
         printf("Valor: %c\nQuantidade: %d\n", get_val(symbol), get_qty(symbol));

@@ -189,5 +189,56 @@ void generate_code_array (node_t* node, char** code_array, char* symbol_code, in
     generate_code_array(node_get_right(node), code_array, symbol_code, aux+1);
 }
 
-//void free_huffmanTree(tree_t* t){
-//}
+void compress_file (char* outputFile, char* inputFile , char** codes){
+    FILE* fo = fopen(outputFile, "w");
+    FILE* fi = fopen(inputFile, "rb");
+    if (fo == NULL || fi == NULL){
+        perror("huffman -> compress_file: fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    int c;
+
+    fprintf(fo, "[");
+    for (c = 0; c< TAM_SYM; c++){
+        if (codes[c]){
+            fprintf(fo, "%d;%s;", c, codes[c]);
+        }
+    }
+
+    fprintf(fo, " ]");
+
+    while((c = getc(fi))!= EOF){
+        fprintf(fo, "%s", codes[c]);
+    }
+
+    fclose(fo);
+    fclose(fi);
+
+}
+
+/*static tree_t* code_to_tree (FILE* fi){
+
+}*/
+
+void decompress (char* outputFile, char* inputFile , tree_t* t){
+    FILE* fo = fopen(outputFile, "w");
+    FILE* fi = fopen(inputFile, "rb");
+    if (fo == NULL || fi == NULL){
+        perror("huffman -> decompress: fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    char* s[3];
+
+    //tree_t* t = code_to_tree(fi);
+
+}
+
+void free_huffmanTree(tree_t* t){
+    if(t == NULL){
+        perror("huffman->free_huffmanTree: ");
+        exit(EXIT_FAILURE);
+    }
+
+}

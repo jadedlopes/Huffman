@@ -16,4 +16,6 @@ int comp_symbol (void* s1, void* s2);
 void export_huffmanTree (const char* filename, tree_t* t);
 void generate_code_array (node_t* node, char** code_array, char* symbol_code, int aux);
 
+void compress_file (char* outputFile, char* inputFile , char** codes);
+
 #endif // HUFFMAN_H_INCLUDED
