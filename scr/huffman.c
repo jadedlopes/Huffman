@@ -241,4 +241,21 @@ void free_huffmanTree(tree_t* t){
         exit(EXIT_FAILURE);
     }
 
+    free_huffmanNode(tree_get_root(t));     // Libera todos os nós para depois liberar a árvore
+    free(t);
+
+
+}
+
+void free_huffmanNode(node_t *n){
+
+    if (n == NULL)
+        return;
+
+    free_huffmanNode(node_get_left(n));
+    free_huffmanNode(node_get_right(n));
+
+    free(node_get_data(n));
+
+    free(n);
 }

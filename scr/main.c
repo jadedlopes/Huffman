@@ -20,12 +20,16 @@ int main()
 
     generate_code_array(tree_get_root(t), code_array, code, 0);
 
+    compress_file("bolo.jc", "bolo.txt", code_array);
+
     for (i=0; i<256; i++){
-        if(code_array[i])
+        if(code_array[i]){
             printf("%c -- %s\n", i, code_array[i]);
+            free(code_array[i]);
+        }
     }
 
-    compress_file("bolo.jc", "bolo.txt", code_array);
+    free_huffmanTree(t);
 
     /*while(!fila_vazia(fila)) {
         symbol = node_get_data(dequeue(fila));
