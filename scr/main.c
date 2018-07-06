@@ -6,7 +6,7 @@
 int main()
 {
     fila_t * fila;
-    symbol_t * symbol;
+    //symbol_t * symbol;
     tree_t* t;
     char code[100] = {0};
     char* code_array [256] = {0};

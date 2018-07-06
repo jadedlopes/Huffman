@@ -222,7 +222,7 @@ void compress_file (char* outputFile, char* inputFile , char** codes){
 
 }*/
 
-void decompress (char* outputFile, char* inputFile , tree_t* t){
+void decompress (char* outputFile, char* inputFile){
     FILE* fo = fopen(outputFile, "w");
     FILE* fi = fopen(inputFile, "rb");
     if (fo == NULL || fi == NULL){
@@ -230,13 +230,27 @@ void decompress (char* outputFile, char* inputFile , tree_t* t){
         exit(EXIT_FAILURE);
     }
 
-    char* code[10] = {0};
-    symbol_t* s;
+    node_t* node;
+    char c;
 
-    //tree_t* t = code_to_tree(fi);
+    tree_t* t = code_to_tree(fi);   // Já deixa o ponteiro de leitura do arquivo após os códigos, pronto para decodificar
 
+    node = tree_get_root(t);
+    while((c = fgetc(fi)) != EOF){
+        if (c == '0'){
+            node = node_get_left(node);
+        }else{
+            node = node_get_right(node);
+        }
 
+        if (node_is_leaf(node)){
+            fprintf(fo, "%c", get_val(node_get_data(node)));
+            node = tree_get_root(t);
+        }
+    }
 
+    fclose(fi);
+    fclose(fo);
 }
 
 void free_huffmanTree(tree_t* t){
