@@ -19,5 +19,6 @@ void generate_code_array (node_t* node, char** code_array, char* symbol_code, in
 void free_huffmanNode(node_t *n);
 void free_huffmanTree(tree_t* t);
 void compress_file (char* outputFile, char* inputFile , char** codes);
+void decompress (char* outputFile, char* inputFile);
 
 #endif // HUFFMAN_H_INCLUDED

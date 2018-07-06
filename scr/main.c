@@ -29,6 +29,7 @@ int main()
         }
     }
 
+    decompress("bolo.jc", "bolo.txt");
 
     free_huffmanTree(t);
 
