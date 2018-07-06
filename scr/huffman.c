@@ -8,7 +8,7 @@
 #define TRUE 1
 #define FALSE 0
 
-#define DEBUG
+//#define DEBUG
 
 struct symbol {
     int val;    //  Valor
@@ -228,6 +228,10 @@ static tree_t* code_to_tree (FILE* fi){            // usar em decompress
     tree_t* t = create_tree(comp_symbol);
 
     s = malloc(sizeof(symbol_t));
+    if (s == NULL){
+        perror("huffman -> code_to_tree: malloc root");
+        exit(EXIT_FAILURE);
+    }
     s->val = 0;
     node = create_t_node(s);
     tree_add_root(t, node);
@@ -247,6 +251,10 @@ static tree_t* code_to_tree (FILE* fi){            // usar em decompress
                 if (buffer[0] == '0'){
                     if (node_is_leaf(node)){
                         s = malloc(sizeof(symbol_t));
+                        if (s == NULL){
+                            perror("huffman -> code_to_tree: malloc leaf esq");
+                            exit(EXIT_FAILURE);
+                        }
                         s->qty = 1;
                         n = create_t_node(s);
                         tree_add_node(t, node, n);
@@ -259,6 +267,10 @@ static tree_t* code_to_tree (FILE* fi){            // usar em decompress
                             node = node_get_right(node);
                         }else{
                             s = malloc(sizeof(symbol_t));
+                            if (s == NULL){
+                                perror("huffman -> code_to_tree: malloc esq");
+                                exit(EXIT_FAILURE);
+                            }
                             s->qty = 1;
                             n = create_t_node(s);
                             tree_add_node(t, node, n);
@@ -269,6 +281,10 @@ static tree_t* code_to_tree (FILE* fi){            // usar em decompress
                 }else{
                     if (node_is_leaf(node)){
                         s = malloc(sizeof(symbol_t));
+                        if (s == NULL){
+                            perror("huffman -> code_to_tree: malloc leaf dir");
+                            exit(EXIT_FAILURE);
+                        }
                         s->qty = 0;
                         n = create_t_node(s);
                         tree_add_node(t, node, n);
@@ -278,6 +294,10 @@ static tree_t* code_to_tree (FILE* fi){            // usar em decompress
                         node = node_get_right(node);
                     }else{
                         s = malloc(sizeof(symbol_t));
+                        if (s == NULL){
+                            perror("huffman -> code_to_tree: malloc dir");
+                            exit(EXIT_FAILURE);
+                        }
                         s->qty = 0;
                         n = create_t_node(s);
                         tree_add_node(t, node, n);
@@ -327,6 +347,7 @@ void decompress (char* outputFile, char* inputFile){
         }
     }
 
+    free_huffmanTree(t);
     fclose(fi);
     fclose(fo);
 }
