@@ -311,7 +311,7 @@ void decompress (char* outputFile, char* inputFile){
     char* code[10] = {0};
     symbol_t* s;
 
-    tree_t* t = code_to_tree(fi);
+    tree_t* t = code_to_tree(fi);   //já deixa o ponteiro de leitura do arquivo apos os codigos, pronto pra decodificar
 
 
 
