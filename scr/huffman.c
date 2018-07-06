@@ -8,7 +8,7 @@
 #define TRUE 1
 #define FALSE 0
 
-//#define DEBUG
+#define DEBUG
 
 struct symbol {
     int val;    //  Valor
@@ -17,6 +17,7 @@ struct symbol {
 
 //----------- Private Functions ----------------
 static void export_run_tree (FILE* fp, node_t* node);
+static tree_t* code_to_tree (FILE* fi);
 //----------------------------------------------
 
 fila_t * read_file(char *filename)
@@ -218,9 +219,86 @@ void compress_file (char* outputFile, char* inputFile , char** codes){
 
 }
 
-/*static tree_t* code_to_tree (FILE* fi){
+static tree_t* code_to_tree (FILE* fi){            // usar em decompress
+    char buffer[2] = {0};
+    int i = 2;
+    char symb_val;
+    symbol_t* s;
+    node_t* node, *n;
+    tree_t* t = create_tree(comp_symbol);
 
-}*/
+    s = malloc(sizeof(symbol_t));
+    s->val = 0;
+    node = create_t_node(s);
+    tree_add_root(t, node);
+
+    fread(buffer, sizeof(char), 2, fi);
+
+    while(buffer[0] != ' ' || buffer[1] != '|'){
+
+        if (buffer[1] == ';' && i == 2){
+            symb_val = buffer[0];
+            #ifdef DEBUG
+                printf("symb: %c\n", symb_val);
+            #endif // DEBUG
+            i--;
+        }else{
+            while (buffer[0] != ';'){
+                if (buffer[0] == '0'){
+                    if (node_is_leaf(node)){
+                        s = malloc(sizeof(symbol_t));
+                        s->qty = 1;
+                        n = create_t_node(s);
+                        tree_add_node(t, node, n);
+
+                        node = node_get_right(node);
+                    }else if ((n = node_get_left(node)) != NULL){
+                        node = n;
+                    }else{
+                        if (get_qty(node_get_data(node_get_right(node))) == 1){
+                            node = node_get_right(node);
+                        }else{
+                            s = malloc(sizeof(symbol_t));
+                            s->qty = 1;
+                            n = create_t_node(s);
+                            tree_add_node(t, node, n);
+
+                            node = node_get_left(node);
+                        }
+                    }
+                }else{
+                    if (node_is_leaf(node)){
+                        s = malloc(sizeof(symbol_t));
+                        s->qty = 0;
+                        n = create_t_node(s);
+                        tree_add_node(t, node, n);
+
+                        node = node_get_right(node);
+                    }else if (get_qty(node_get_data(node_get_right(node))) == 0){
+                        node = node_get_right(node);
+                    }else{
+                        s = malloc(sizeof(symbol_t));
+                        s->qty = 0;
+                        n = create_t_node(s);
+                        tree_add_node(t, node, n);
+
+                        node = node_get_right(node);
+                    }
+                }
+                buffer[0] = fgetc(fi);
+            }
+            s = node_get_data(node);
+            s->val = symb_val;
+            i++;
+            node = tree_get_root(t);
+        }
+
+        fread(buffer, sizeof(char), i, fi);
+    }
+
+    return t;
+
+}
 
 void decompress (char* outputFile, char* inputFile){
     FILE* fo = fopen(outputFile, "w");

@@ -29,7 +29,17 @@ int main()
         }
     }
 
+
     free_huffmanTree(t);
+
+/*--------------- Teste code_to_tree ------------
+
+    t2 = code_to_tree(fopen("bolo.jc", "rb"));
+
+    export_huffmanTree("tree2.dot", t2);
+
+    free_huffmanTree(t2);
+//------------------------------------------------*/
 
     /*while(!fila_vazia(fila)) {
         symbol = node_get_data(dequeue(fila));
